@@ -169,7 +169,7 @@ public class Rasterizer {
         System.out.printf("AEL Size: %d\n", AEL.size());
         Iterator<Bucket> iter = AEL.iterator();
         while (iter.hasNext()) {
-            if (y >= iter.next().ymax) {
+            if (y > iter.next().ymax) {
                 iter.remove();
             }
         }
@@ -190,9 +190,9 @@ public class Rasterizer {
 
     private void fillPixelsOnScanLine(int y, simpleCanvas C) {
         // Iterate all even indexes; except the last one
-        for (int i = 0; i <= AEL.size() - 2; i++) {
+        for (int i = 0; i <= AEL.size() - 2; i += 2) {
             System.out.println("Print pixels from x=" + AEL.get(i).x + " to x=" + AEL.get(i+1).x);
-            for (int x = AEL.get(i).x; x <= AEL.get(i+1).x; x++) {
+            for (int x = AEL.get(i).x; x <= AEL.get(i+1).x; x ++) {
                 C.setPixel(x, y);
             }
         }
@@ -204,7 +204,6 @@ public class Rasterizer {
             if (b.dx != 0 && b.dy != 0) {
                 b.sum = b.sum + b.dx;
                 if (b.sum >= b.dy) {
-                    System.out.println("here! b.sum:" + b.sum + " b.dy:" + b.dy);
                     int change = b.sum / b.dy;
                     b.sum = b.sum % b.dy;
                     if (b.positive_slope) {
