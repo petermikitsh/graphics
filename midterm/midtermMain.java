@@ -118,19 +118,19 @@ public class midtermMain implements KeyListener, MouseListener {
 		 */
 		D.clearTransform();
 		D.setColor( 1.0f, 0.0f, 0.0f );
-        D.draw (triangle);
+         D.draw (triangle);
 		
 		/* 
 		 * Draw a white square 	 
 		 */
 		D.setColor( 1.0f, 1.0f, 1.0f );
-        D.draw (square);
+         D.draw (square);
 		
 		/* 
 		 * Draw a blue otcagon
 		 */
 		D.setColor( 0.0f, 0.0f, 1.0f );
-        D.draw (octagon);
+         D.draw (octagon);
 		
 		/* 
 		 * Draw a green star

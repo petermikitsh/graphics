@@ -169,7 +169,7 @@ public class Rasterizer {
         System.out.printf("AEL Size: %d\n", AEL.size());
         Iterator<Bucket> iter = AEL.iterator();
         while (iter.hasNext()) {
-            if (y > iter.next().ymax) {
+            if (y > iter.next().ymax - 1) {
                 iter.remove();
             }
         }
@@ -189,11 +189,19 @@ public class Rasterizer {
     }
 
     private void fillPixelsOnScanLine(int y, simpleCanvas C) {
-        // Iterate all even indexes; except the last one
-        for (int i = 0; i <= AEL.size() - 2; i += 2) {
-            System.out.println("Print pixels from x=" + AEL.get(i).x + " to x=" + AEL.get(i+1).x);
-            for (int x = AEL.get(i).x; x <= AEL.get(i+1).x; x ++) {
-                C.setPixel(x, y);
+        // remove duplicates
+        ArrayList<Integer> coords = new ArrayList<Integer>();
+        for (int i = 0; i < AEL.size(); i++) {
+            coords.add(AEL.get(i));
+        }
+        if (coords.size() >= 2) {
+            for (int i = 0; i <= coords.size() - 2; i += 2) {
+                System.out.println("Print pixels from x=" + coords.get(i) + " to x=" + coords.get(i+1));
+                if (!(coords.get(i) == coords.get(i+1))) {
+                    for (int x = coords.get(i); x <= coords.get(i+1);x ++) {
+                        C.setPixel(x, y);
+                    }
+                }
             }
         }
     }
