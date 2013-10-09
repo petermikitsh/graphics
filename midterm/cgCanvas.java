@@ -16,6 +16,10 @@ import Jama.*;
 import java.util.*;
 
 public class cgCanvas extends simpleCanvas {
+
+    private HashMap<Integer, Poly> polys;
+    private Matrix transformation;
+    private Rasterizer r;
     
     /**
      * Constructor
@@ -26,6 +30,8 @@ public class cgCanvas extends simpleCanvas {
     cgCanvas (int w, int h)
     {
         super (w, h);
+        polys = new HashMap<Integer, Poly>();
+        r = new Rasterizer(h);
     }
     
     /**
@@ -44,7 +50,9 @@ public class cgCanvas extends simpleCanvas {
      */
     public int addPoly (float x[], float y[], int n)
     {
-        return 0;
+        int id = polys.size();
+        polys.put(id, new Poly(x, y, n));
+        return id;
     }
     
     /**
@@ -54,6 +62,7 @@ public class cgCanvas extends simpleCanvas {
      */
     public void clearTransform()
     {
+        transformation = Matrix.identity(3, 3);
     }
     
     /**
@@ -65,6 +74,17 @@ public class cgCanvas extends simpleCanvas {
      */
     public void draw (int polyID)
     {
+        Poly p = polys.get(polyID);
+        List<Matrix> m = p.matrices(transformation);
+        int n = m.size();
+        int[] px = new int[n];
+        int[] py = new int[n];
+        for (int i = 0; i < n; i++) {
+            px[i] = (int) Math.round(m.get(i).get(0, 0));
+            py[i] = (int) Math.round(m.get(i).get(1, 0));
+        }
+        r.drawPolygon(n, px, py, this);
+        
     }
     
     /**
@@ -77,6 +97,10 @@ public class cgCanvas extends simpleCanvas {
      */
     public void rotate (float degrees)
     {
+        Matrix previous = new Matrix(new double[][]{ {Math.cos(degrees), -Math.sin(degrees), 0},
+                                                     {Math.sin(degrees),  Math.cos(degrees), 0},
+                                                     {        0,                 0,          1} });
+        transformation = previous.times(transformation);
     }
     
     /**
@@ -90,6 +114,10 @@ public class cgCanvas extends simpleCanvas {
      */
     public void scale (float x, float y)
     {
+        Matrix previous = new Matrix(new double[][]{ {x, 0, 0},
+                                                     {0, y ,0},
+                                                     {0, 0, 1} });
+        transformation = previous.times(transformation);
     }
     
     /**
@@ -133,5 +161,9 @@ public class cgCanvas extends simpleCanvas {
      */
     public void translate (float x, float y)
     {
+        Matrix previous = new Matrix(new double[][]{ {1, 0, x},
+                                                     {0, 1 ,y},
+                                                     {0, 0, 1} });
+        transformation = previous.times(transformation);
     }
 }
