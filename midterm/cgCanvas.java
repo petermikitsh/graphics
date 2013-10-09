@@ -22,6 +22,7 @@ public class cgCanvas extends simpleCanvas {
     private Rasterizer r;
     private clipper c;
     private int[] clipRegion;
+    private Matrix transform;
     
     /**
      * Constructor
@@ -77,8 +78,10 @@ public class cgCanvas extends simpleCanvas {
      */
     public void draw (int polyID)
     {
+        // Get the Polygon
         Poly p = polys.get(polyID);
 
+        // Clip to the clipping region
         if (clipRegion != null) {
             float[] outx = new float[50];
             float[] outy = new float[50];
@@ -86,7 +89,20 @@ public class cgCanvas extends simpleCanvas {
             p = new Poly(outx, outy, outn);
         }
 
+        // Apply the normalization transformation matrix.
+        //
+        // Matrix normalization = new Matrix(...);
+        // transformation = normalization.times(transformation);
+
+        // Apply the viewing transformation matrix.
+        // 
+        // Matrix viewing = new Matrix(...);
+        // transformation = viewing.times(transformation);
+
+        // Apply all transformations and round to integer values.
         int[][] t = p.transform(transformation);
+
+        // Draw.
         r.drawPolygon(t[0][0], t[1], t[2], this);
         
     }
@@ -156,6 +172,7 @@ public class cgCanvas extends simpleCanvas {
      */
     public void setViewport (int x, int y, int width, int height)
     {
+        // instantiate viewing transformation matrix
     }
 
     
