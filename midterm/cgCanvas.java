@@ -20,6 +20,8 @@ public class cgCanvas extends simpleCanvas {
     private HashMap<Integer, Poly> polys;
     private Matrix transformation;
     private Rasterizer r;
+    private clipper c;
+    private int[] clipRegion;
     
     /**
      * Constructor
@@ -32,6 +34,7 @@ public class cgCanvas extends simpleCanvas {
         super (w, h);
         polys = new HashMap<Integer, Poly>();
         r = new Rasterizer(h);
+        c = new clipper();
     }
     
     /**
@@ -75,15 +78,16 @@ public class cgCanvas extends simpleCanvas {
     public void draw (int polyID)
     {
         Poly p = polys.get(polyID);
-        List<Matrix> m = p.matrices(transformation);
-        int n = m.size();
-        int[] px = new int[n];
-        int[] py = new int[n];
-        for (int i = 0; i < n; i++) {
-            px[i] = (int) Math.round(m.get(i).get(0, 0));
-            py[i] = (int) Math.round(m.get(i).get(1, 0));
+
+        if (clipRegion != null) {
+            float[] outx = new float[50];
+            float[] outy = new float[50];
+            int outn = c.clipPolygon(p.n(), p.x(), p.y(), outx, outy, clipRegion[0], clipRegion[1], clipRegion[2], clipRegion[3]);
+            p = new Poly(outx, outy, outn);
         }
-        r.drawPolygon(n, px, py, this);
+
+        int[][] t = p.transform(transformation);
+        r.drawPolygon(t[0][0], t[1], t[2], this);
         
     }
     
@@ -132,6 +136,11 @@ public class cgCanvas extends simpleCanvas {
      */
     public void setClipWindow (float bottom, float top, float left, float right)
     {
+        clipRegion = new int[4];
+        clipRegion[0] = (int) left;
+        clipRegion[1] = (int) bottom;
+        clipRegion[2] = (int) right;
+        clipRegion[3] = (int) top;
     }
     
     

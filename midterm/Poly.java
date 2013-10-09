@@ -27,17 +27,28 @@ class Poly {
 		return n;
 	}
 
-	public List<Matrix> matrices(Matrix transformation) {
-		List<Matrix> list = new ArrayList<Matrix>();
+	public int[][] transform(Matrix transformation) {
+		// Apply transforation to all vertices
+		List<Matrix> matrices = new ArrayList<Matrix>();
 		for (int i = 0; i < n; i++) {
-			Matrix m = new Matrix(new double[][]{ { x[i] },
-												  { y[i] },
-												  {  1   }});
-			list.add(transformation.times(m));
+			Matrix matrix = new Matrix(new double[][]{ { x[i] },
+													   { y[i] },
+													   {  1   }});
+			matrices.add(transformation.times(matrix));
 		}
-		return list;
+		return matricesToPoly(matrices);
 	}
 
-	//public static matrixToPoly(List<Matrix> matrices) {}
+	public int[][] matricesToPoly(List<Matrix> matrices) {
+		// Round to integer values
+        int n = matrices.size();
+        int[] nx = new int[x.length];
+        int[] ny = new int[y.length];
+        for (int i = 0; i < n; i++) {
+            nx[i] = (int) Math.round(matrices.get(i).get(0, 0));
+            ny[i] = (int) Math.round(matrices.get(i).get(1, 0));
+        }
+        return new int[][]{new int[]{n}, nx, ny};
+	}
 
 }
