@@ -124,7 +124,46 @@ public class cgShape extends simpleShape
         if( heightDivisions < 1 )
 	    heightDivisions = 1;
 
+        makeDisks(radius, radialDivisions);
+
     }
+
+    /* Approximates disks on the y-axis centered at (0,0).
+       Draws triangles by connecting points at Theta_i, Theta_i+1, and the center.
+    */
+    private void makeDisks(float r, int n) {
+
+        float x0, z0, x1, z1, theta0, theta1;
+
+        Point d0 = new Point (0f, -0.5f, 0f);
+        Point d1 = new Point (0f,  0.5f, 0f);
+
+        theta0 = 0;
+        x0 = r * (float) Math.cos(0);
+        z0 = r * (float) Math.sin(0);
+
+        for (int i = 0; i < n; i++) {
+
+            theta1 = theta0 + (float) 360/n;
+
+            x1 = r * (float) Math.cos(Math.toRadians(theta1));
+            z1 = r * (float) Math.sin(Math.toRadians(theta1));
+
+            addTriangle( d0.x, d0.y, d0.z,
+                           x0, d0.y,   z0,
+                           x1, d0.y,   z1);
+
+            addTriangle(   x1, d1.y,   z1,
+                           x0, d1.y,   z0,
+                         d1.x, d1.y, d1.z);
+
+            x0 = x1;
+            z0 = z1;
+            theta0 = theta1;
+        }
+
+    }
+
 
     /**
      * makeCone - Create polygons for a cone with unit height, centered at the
