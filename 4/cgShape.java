@@ -52,55 +52,54 @@ public class cgShape extends simpleShape
     {
         if( subdivisions < 1 )
 	    subdivisions = 1;
-        Point top = new Point(-0.5f, -0.5f,  0.5f);
-        drawSide(top, subdivisions);
 
+        drawCube(new Point(-0.5f, -0.5f,  0.5f), subdivisions);
     }
 
-    private void drawSide(Point p, int n) {
+    /* Find each subsquare and draw on each axis. */
+    private void drawCube(Point p, int n) {
         for (int i = 0; i < n; i++) {
             float x0 = (float) i/n - 0.5f;
             float x1 = (float) (i+1)/n - 0.5f;
             for (int j = 0; j < n; j++) {
                 float y0 = (float) j/n - 0.5f;
                 float y1 = (float) (j+1)/n - 0.5f;
-                //System.out.printf("x0 = %f\n x1 = %f\n y0 = %f\n y1 = %f\n p.x = %f\n p.y = %f\n p.z = %f\n", x0, x1, y0, y1, p.x, p.y, p.z);
-                addTriangle(x0, y1, p.z,
-                            x1, y0, p.z,
-                            x0, y0, p.z);
-                addTriangle(x1, y1, p.z,
-                            x1, y0, p.z,
-                            x0, y1, p.z);
-                addTriangle(x0, y0, -p.z,
-                            x1, y0, -p.z,
-                            x0, y1, -p.z);
-                addTriangle(x0, y1, -p.z,
-                            x1, y0, -p.z,
-                            x1, y1, -p.z);
-                addTriangle(p.x, x0, y0,
-                            p.x, x1, y0,
-                            p.x, x0, y1);
-                addTriangle(p.x, x0, y1,
-                            p.x, x1, y0,
-                            p.x, x1, y1);
-                addTriangle(-p.x, x0, y1,
-                            -p.x, x1, y0,
-                            -p.x, x0, y0);
-                addTriangle(-p.x, x1, y1,
-                            -p.x, x1, y0,
-                            -p.x, x0, y1);
-                addTriangle(x0, p.y, y1,
-                            x1, p.y, y0,
-                            x0, p.y, y0);
-                addTriangle(x1, p.y, y1,
-                            x1, p.y, y0,
-                            x0, p.y, y1);
-                addTriangle(x0, -p.y, y0,
-                            x1, -p.y, y0,
-                            x0, -p.y, y1);
-                addTriangle(x0, -p.y, y1,
-                            x1, -p.y, y0,
-                            x1, -p.y, y1);
+                addTriangle(  x0,   y1,   p.z,
+                              x1,   y0,   p.z,
+                              x0,   y0,   p.z);
+                addTriangle(  x1,   y1,   p.z,
+                              x1,   y0,   p.z,
+                              x0,   y1,   p.z);
+                addTriangle(  x0,   y0,   -p.z,
+                              x1,   y0,   -p.z,
+                              x0,   y1,   -p.z);
+                addTriangle(  x0,   y1,   -p.z,
+                              x1,   y0,   -p.z,
+                              x1,   y1,   -p.z);
+                addTriangle( p.x,   x0,   y0,
+                             p.x,   x1,   y0,
+                             p.x,   x0,   y1);
+                addTriangle( p.x,   x0,   y1,
+                             p.x,   x1,   y0,
+                             p.x,   x1,   y1);
+                addTriangle(-p.x,   x0,   y1,
+                            -p.x,   x1,   y0,
+                            -p.x,   x0,   y0);
+                addTriangle(-p.x,   x1,   y1,
+                            -p.x,   x1,   y0,
+                            -p.x,   x0,   y1);
+                addTriangle(  x0,  p.y,   y1,
+                              x1,  p.y,   y0,
+                              x0,  p.y,   y0);
+                addTriangle(  x1,  p.y,   y1,
+                              x1,  p.y,   y0,
+                              x0,  p.y,   y1);
+                addTriangle(  x0, -p.y,   y0,
+                              x1, -p.y,   y0,
+                              x0, -p.y,   y1);
+                addTriangle(  x0, -p.y,   y1,
+                              x1, -p.y,   y0,
+                              x1, -p.y,   y1);
             }
         }
 
