@@ -124,14 +124,14 @@ public class cgShape extends simpleShape
         if( heightDivisions < 1 )
 	    heightDivisions = 1;
 
-        makeDisks(radius, radialDivisions);
+        makeDisks(radius, radialDivisions, heightDivisions);
 
     }
 
     /* Approximates disks on the y-axis centered at (0,0).
        Draws triangles by connecting points at Theta_i, Theta_i+1, and the center.
     */
-    private void makeDisks(float r, int n) {
+    private void makeDisks(float r, int n, int rect) {
 
         float x0, z0, x1, z1, theta0, theta1;
 
@@ -157,11 +157,37 @@ public class cgShape extends simpleShape
                            x0, d1.y,   z0,
                          d1.x, d1.y, d1.z);
 
+            Point p0 = new Point(x0, d0.y, z0);
+            Point p1 = new Point(x1, d0.y, z1);
+            drawCylinderRect(p0, p1, rect);
+
             x0 = x1;
             z0 = z1;
             theta0 = theta1;
         }
 
+    }
+
+    private void drawCylinderRect(Point p0, Point p1, int n) {
+        float y0, y1;
+        
+        y0 = -0.5f;
+        
+        for (int i = 0; i < n; i++) {
+            
+            y1 = y0 + (float) 1/n;
+
+            addTriangle(p0.x, y1, p0.z,
+                        p1.x, y1, p1.z,
+                        p0.x, y0, p0.z);
+
+            addTriangle(p1.x, y1, p1.z,
+                        p1.x, y0, p1.z,
+                        p0.x, y0, p0.z);
+
+            y0 = y1;
+
+        }
     }
 
 
