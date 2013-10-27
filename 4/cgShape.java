@@ -17,13 +17,14 @@ import javax.media.opengl.awt.GLCanvas;
 import java.io.*;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.HashMap;
 import static java.util.Arrays.asList;
 
 
 public class cgShape extends simpleShape
 {
 
-    List<Triangle> icosahedron;
+    HashMap<Integer, List<Triangle>> icosahedron;
 
     /**
 	 * constructor
@@ -43,7 +44,18 @@ public class cgShape extends simpleShape
             this.x = x;
             this.y = y;
             this.z = z;
-        }   
+        }
+
+        public void normalize() {
+            float d = (float) Math.sqrt((x * x) + (y * y) + (z * z));
+            if (d == 0.0) {
+                return;
+            } else {
+                x /= d;
+                y /= d;
+                z /= d;
+            } 
+        }
     }
 
     static class Triangle {
@@ -53,6 +65,42 @@ public class cgShape extends simpleShape
         }
         public Point get (int i) {
             return points.get(i);
+        }
+        public List<Triangle> subdivide() {
+
+            List<Triangle> list = new ArrayList<Triangle>(4);
+            Point m01 = new Point(midX(0), midY(0), midZ(0));
+            Point m12 = new Point(midX(1), midY(1), midZ(1));
+            Point m02 = new Point(midX(2), midY(2), midZ(2));
+
+            m01.normalize();
+            m12.normalize();
+            m02.normalize();
+
+            list.add(new Triangle(asList(get(0), m02,    m01)));
+            list.add(new Triangle(asList(m02,    m12,    m01)));
+            list.add(new Triangle(asList(m12,    get(1), m01)));
+            list.add(new Triangle(asList(m02,    get(2), m12)));   
+
+            return list;
+        }
+
+        public float midX(int i) {
+            int j;
+            j = i >= 2 ? 0 : i+1;
+            return (points.get(i).x + points.get(j).x) / 2.0f;
+        }
+
+        public float midY(int i) {
+            int j;
+            j = i >= 2 ? 0 : i+1;
+            return (points.get(i).y + points.get(j).y) / 2.0f;
+        }
+
+        public float midZ(int i) {
+            int j;
+            j = i >= 2 ? 0 : i+1;
+            return (points.get(i).z + points.get(j).z) / 2.0f;
         }
     }
 
@@ -269,7 +317,6 @@ public class cgShape extends simpleShape
     }
 
     private void makeConeHeight(Point p0, Point p1, int h) {
-        System.out.println("Height is now " + h);
         float ix0, iz0, ix1, iz1, fx0, fz0, fx1, fz1, y0, y1;
 
         ix0 = p0.x;
@@ -280,7 +327,6 @@ public class cgShape extends simpleShape
 
         for (int i = 0; i < h; i++) {
             if (i == h-1) {
-                System.out.println("Base case: i = " + i); 
                 Point base = new Point(0f, 0.5f, 0f);
                 
                 addTriangle(ix0,    y0,     iz0,
@@ -288,7 +334,6 @@ public class cgShape extends simpleShape
                             base.x, base.y, base.z);
 
             } else {
-                System.out.println("I is " + i);
 
                 y1  = y0 + (float) (1/h);
                 fx0 = (1 - (float) (1/h)) * ix0;
@@ -304,7 +349,6 @@ public class cgShape extends simpleShape
                             fx1, y1, fz1,
                             fx0, y1, fz0);
 
-
                 y0  = y1;
                 ix0 = fx0;
                 iz0 = fz0;
@@ -317,40 +361,51 @@ public class cgShape extends simpleShape
     private void constructIcosahedron() {
         float a = 2f / (float) (1f + Math.sqrt(5));
 
-        Point p0  = new Point( 0/2f,  a/2f, -1/2f);
-        Point p1  = new Point(-a/2f,  1/2f,  0/2f);
-        Point p2  = new Point( a/2f,  1/2f,  0/2f);
-        Point p3  = new Point( 0/2f,  a/2f,  1/2f);
-        Point p4  = new Point(-1/2f,  0/2f,  a/2f);
-        Point p5  = new Point( 0/2f, -a/2f,  1/2f);
-        Point p6  = new Point( 1/2f,  0/2f,  a/2f);
-        Point p7  = new Point( 1/2f,  0/2f, -a/2f);
-        Point p8  = new Point( 0/2f, -a/2f, -1/2f);
-        Point p9  = new Point(-1/2f,  0/2f, -a/2f);
-        Point p10 = new Point(-a/2f, -1/2f,  0/2f);
-        Point p11 = new Point( a/2f, -1/2f,  0/2f);
+        Point[] p = new Point[12];
+        p[0]  = new Point( 0/2f,  a/2f, -1/2f);
+        p[1]  = new Point(-a/2f,  1/2f,  0/2f);
+        p[2]  = new Point( a/2f,  1/2f,  0/2f);
+        p[3]  = new Point( 0/2f,  a/2f,  1/2f);
+        p[4]  = new Point(-1/2f,  0/2f,  a/2f);
+        p[5]  = new Point( 0/2f, -a/2f,  1/2f);
+        p[6]  = new Point( 1/2f,  0/2f,  a/2f);
+        p[7]  = new Point( 1/2f,  0/2f, -a/2f);
+        p[8]  = new Point( 0/2f, -a/2f, -1/2f);
+        p[9]  = new Point(-1/2f,  0/2f, -a/2f);
+        p[10] = new Point(-a/2f, -1/2f,  0/2f);
+        p[11] = new Point( a/2f, -1/2f,  0/2f);
 
-        icosahedron = new ArrayList<Triangle>(20);
-        icosahedron.add(new Triangle(asList(p0,  p1,  p2)));
-        icosahedron.add(new Triangle(asList(p3,  p2,  p1)));
-        icosahedron.add(new Triangle(asList(p3,  p4,  p5)));
-        icosahedron.add(new Triangle(asList(p3,  p5,  p6)));
-        icosahedron.add(new Triangle(asList(p0,  p7,  p8)));
-        icosahedron.add(new Triangle(asList(p0,  p8,  p9)));
-        icosahedron.add(new Triangle(asList(p5,  p10, p11)));
-        icosahedron.add(new Triangle(asList(p8,  p11, p10)));
-        icosahedron.add(new Triangle(asList(p1,  p9,  p4)));
-        icosahedron.add(new Triangle(asList(p10, p4,  p9)));
-        icosahedron.add(new Triangle(asList(p2,  p6,  p7)));
-        icosahedron.add(new Triangle(asList(p11, p7,  p6)));
-        icosahedron.add(new Triangle(asList(p3,  p1,  p4)));
-        icosahedron.add(new Triangle(asList(p3,  p6,  p2)));
-        icosahedron.add(new Triangle(asList(p0,  p9,  p1)));
-        icosahedron.add(new Triangle(asList(p0,  p2,  p7)));
-        icosahedron.add(new Triangle(asList(p8,  p10, p9)));
-        icosahedron.add(new Triangle(asList(p8,  p7,  p11)));
-        icosahedron.add(new Triangle(asList(p5,  p4,  p10)));
-        icosahedron.add(new Triangle(asList(p5,  p11, p6)));
+        for (Point pt : p) {
+            pt.normalize();
+        }
+        
+        List<Triangle> d0 = new ArrayList<Triangle>();
+        d0.add(new Triangle(asList(p[0],  p[1],  p[2])));
+        d0.add(new Triangle(asList(p[3],  p[2],  p[1])));
+        d0.add(new Triangle(asList(p[3],  p[4],  p[5])));
+        d0.add(new Triangle(asList(p[3],  p[5],  p[6])));
+        d0.add(new Triangle(asList(p[0],  p[7],  p[8])));
+        d0.add(new Triangle(asList(p[0],  p[8],  p[9])));
+        d0.add(new Triangle(asList(p[5],  p[10], p[11])));
+        d0.add(new Triangle(asList(p[8],  p[11], p[10])));
+        d0.add(new Triangle(asList(p[1],  p[9],  p[4])));
+        d0.add(new Triangle(asList(p[10], p[4],  p[9])));
+        d0.add(new Triangle(asList(p[2],  p[6],  p[7])));
+        d0.add(new Triangle(asList(p[11], p[7],  p[6])));
+        d0.add(new Triangle(asList(p[3],  p[1],  p[4])));
+        d0.add(new Triangle(asList(p[3],  p[6],  p[2])));
+        d0.add(new Triangle(asList(p[0],  p[9],  p[1])));
+        d0.add(new Triangle(asList(p[0],  p[2],  p[7])));
+        d0.add(new Triangle(asList(p[8],  p[10], p[9])));
+        d0.add(new Triangle(asList(p[8],  p[7],  p[11])));
+        d0.add(new Triangle(asList(p[5],  p[4],  p[10])));
+        d0.add(new Triangle(asList(p[5],  p[11], p[6])));
+
+        icosahedron = new HashMap<Integer, List<Triangle>>();
+        icosahedron.put(0, d0);
+
+        for (int i = 1; i <= 5; i++)
+          makeSphereDivision(i);
 
     }
 
@@ -367,12 +422,26 @@ public class cgShape extends simpleShape
      */
     public void makeSphere (float radius, int slices, int stacks)
     {
-        for (Triangle t : icosahedron) {
+
+        if (slices > 5)
+          slices = 5;
+
+        for (Triangle t : icosahedron.get(slices-1)) {
             addTriangle(t.get(0).x, t.get(0).y, t.get(0).z,
                         t.get(1).x, t.get(1).y, t.get(1).z,
                         t.get(2).x, t.get(2).y, t.get(2).z);
         }
 
+    }
+
+    private void makeSphereDivision(int n) {
+        List<Triangle> dN = new ArrayList<Triangle>(4*icosahedron.get(n-1).size());
+        for (Triangle t : icosahedron.get(n-1)) {
+            for (Triangle tN : t.subdivide()) {
+                dN.add(tN);
+            }
+        }
+        icosahedron.put(n, dN);
     }
 
 }
