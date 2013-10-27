@@ -48,13 +48,18 @@ public class cgShape extends simpleShape
 
         public void normalize() {
             float d = (float) Math.sqrt((x * x) + (y * y) + (z * z));
-            if (d == 0.0) {
-                return;
-            } else {
+            if (d != 0.0) {
                 x /= d;
                 y /= d;
                 z /= d;
-            } 
+            }
+            scale();
+        }
+
+        public void scale() {
+            x /= 2;
+            y /= 2;
+            z /= 2; 
         }
     }
 
@@ -362,18 +367,18 @@ public class cgShape extends simpleShape
         float a = 2f / (float) (1f + Math.sqrt(5));
 
         Point[] p = new Point[12];
-        p[0]  = new Point( 0/2f,  a/2f, -1/2f);
-        p[1]  = new Point(-a/2f,  1/2f,  0/2f);
-        p[2]  = new Point( a/2f,  1/2f,  0/2f);
-        p[3]  = new Point( 0/2f,  a/2f,  1/2f);
-        p[4]  = new Point(-1/2f,  0/2f,  a/2f);
-        p[5]  = new Point( 0/2f, -a/2f,  1/2f);
-        p[6]  = new Point( 1/2f,  0/2f,  a/2f);
-        p[7]  = new Point( 1/2f,  0/2f, -a/2f);
-        p[8]  = new Point( 0/2f, -a/2f, -1/2f);
-        p[9]  = new Point(-1/2f,  0/2f, -a/2f);
-        p[10] = new Point(-a/2f, -1/2f,  0/2f);
-        p[11] = new Point( a/2f, -1/2f,  0/2f);
+        p[0]  = new Point( 0,  a, -1);
+        p[1]  = new Point(-a,  1,  0);
+        p[2]  = new Point( a,  1,  0);
+        p[3]  = new Point( 0,  a,  1);
+        p[4]  = new Point(-1,  0,  a);
+        p[5]  = new Point( 0, -a,  1);
+        p[6]  = new Point( 1,  0,  a);
+        p[7]  = new Point( 1,  0, -a);
+        p[8]  = new Point( 0, -a, -1);
+        p[9]  = new Point(-1,  0, -a);
+        p[10] = new Point(-a, -1,  0);
+        p[11] = new Point( a, -1,  0);
 
         for (Point pt : p) {
             pt.normalize();
