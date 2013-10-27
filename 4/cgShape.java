@@ -15,15 +15,22 @@ import java.awt.event.*;
 import javax.media.opengl.*;
 import javax.media.opengl.awt.GLCanvas;
 import java.io.*;
+import java.util.List;
+import java.util.ArrayList;
+import static java.util.Arrays.asList;
 
 
 public class cgShape extends simpleShape
 {
+
+    List<Triangle> icosahedron;
+
     /**
 	 * constructor
 	 */
 	public cgShape()
 	{
+        constructIcosahedron();
 	}
 
     // public enum Axis {
@@ -37,6 +44,16 @@ public class cgShape extends simpleShape
             this.y = y;
             this.z = z;
         }   
+    }
+
+    static class Triangle {
+        List<Point> points;
+        public Triangle(List<Point> points) {
+            this.points = points;
+        }
+        public Point get (int i) {
+            return points.get(i);
+        }
     }
 
     /**
@@ -297,6 +314,46 @@ public class cgShape extends simpleShape
         }
     }
 
+    private void constructIcosahedron() {
+        float a = 2f / (float) (1f + Math.sqrt(5));
+
+        Point p0  = new Point( 0/2f,  a/2f, -1/2f);
+        Point p1  = new Point(-a/2f,  1/2f,  0/2f);
+        Point p2  = new Point( a/2f,  1/2f,  0/2f);
+        Point p3  = new Point( 0/2f,  a/2f,  1/2f);
+        Point p4  = new Point(-1/2f,  0/2f,  a/2f);
+        Point p5  = new Point( 0/2f, -a/2f,  1/2f);
+        Point p6  = new Point( 1/2f,  0/2f,  a/2f);
+        Point p7  = new Point( 1/2f,  0/2f, -a/2f);
+        Point p8  = new Point( 0/2f, -a/2f, -1/2f);
+        Point p9  = new Point(-1/2f,  0/2f, -a/2f);
+        Point p10 = new Point(-a/2f, -1/2f,  0/2f);
+        Point p11 = new Point( a/2f, -1/2f,  0/2f);
+
+        icosahedron = new ArrayList<Triangle>(20);
+        icosahedron.add(new Triangle(asList(p0,  p1,  p2)));
+        icosahedron.add(new Triangle(asList(p3,  p2,  p1)));
+        icosahedron.add(new Triangle(asList(p3,  p4,  p5)));
+        icosahedron.add(new Triangle(asList(p3,  p5,  p6)));
+        icosahedron.add(new Triangle(asList(p0,  p7,  p8)));
+        icosahedron.add(new Triangle(asList(p0,  p8,  p9)));
+        icosahedron.add(new Triangle(asList(p5,  p10, p11)));
+        icosahedron.add(new Triangle(asList(p8,  p11, p10)));
+        icosahedron.add(new Triangle(asList(p1,  p9,  p4)));
+        icosahedron.add(new Triangle(asList(p10, p4,  p9)));
+        icosahedron.add(new Triangle(asList(p2,  p6,  p7)));
+        icosahedron.add(new Triangle(asList(p11, p7,  p6)));
+        icosahedron.add(new Triangle(asList(p3,  p1,  p4)));
+        icosahedron.add(new Triangle(asList(p3,  p6,  p2)));
+        icosahedron.add(new Triangle(asList(p0,  p9,  p1)));
+        icosahedron.add(new Triangle(asList(p0,  p2,  p7)));
+        icosahedron.add(new Triangle(asList(p8,  p10, p9)));
+        icosahedron.add(new Triangle(asList(p8,  p7,  p11)));
+        icosahedron.add(new Triangle(asList(p5,  p4,  p10)));
+        icosahedron.add(new Triangle(asList(p5,  p11, p6)));
+
+    }
+
     /**
      * makeSphere - Create sphere of a given radius, centered at the origin, 
      * using spherical coordinates with separate number of thetha and 
@@ -310,6 +367,12 @@ public class cgShape extends simpleShape
      */
     public void makeSphere (float radius, int slices, int stacks)
     {
+        for (Triangle t : icosahedron) {
+            addTriangle(t.get(0).x, t.get(0).y, t.get(0).z,
+                        t.get(1).x, t.get(1).y, t.get(1).z,
+                        t.get(2).x, t.get(2).y, t.get(2).z);
+        }
+
     }
 
 }
