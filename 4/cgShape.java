@@ -210,6 +210,91 @@ public class cgShape extends simpleShape
         if( heightDivisions < 1 )
 	    heightDivisions = 1;
 
+        makeConeDisk(radius, radialDivisions, heightDivisions);
+
+    }
+
+
+    /* Approximates disks on the y-axis centered at (0,0).
+       Draws triangles by connecting points at Theta_i, Theta_i+1, and the center.
+    */
+    private void makeConeDisk(float r, int n, int h) {
+
+        float x0, z0, x1, z1, theta0, theta1;
+
+        Point d0 = new Point (0f, -0.5f, 0f);
+
+        theta0 = 0;
+        x0 = r * (float) Math.cos(0);
+        z0 = r * (float) Math.sin(0);
+
+        for (int i = 0; i < n; i++) {
+
+            theta1 = theta0 + (float) 360/n;
+
+            x1 = r * (float) Math.cos(Math.toRadians(theta1));
+            z1 = r * (float) Math.sin(Math.toRadians(theta1));
+
+            addTriangle( d0.x, d0.y, d0.z,
+                           x0, d0.y,   z0,
+                           x1, d0.y,   z1);
+
+            Point p0 = new Point(x0, d0.y, z0);
+            Point p1 = new Point(x1, d0.y, z1);
+
+            makeConeHeight(p0, p1, h);
+
+            x0 = x1;
+            z0 = z1;
+            theta0 = theta1;
+        }
+
+    }
+
+    private void makeConeHeight(Point p0, Point p1, int h) {
+        System.out.println("Height is now " + h);
+        float ix0, iz0, ix1, iz1, fx0, fz0, fx1, fz1, y0, y1;
+
+        ix0 = p0.x;
+        iz0 = p0.z;
+        ix1 = p1.x;
+        iz1 = p1.z;
+        y0 = -0.5f;
+
+        for (int i = 0; i < h; i++) {
+            if (i == h-1) {
+                System.out.println("Base case: i = " + i); 
+                Point base = new Point(0f, 0.5f, 0f);
+                
+                addTriangle(ix0,    y0,     iz0,
+                            ix1,    y0,     iz1,
+                            base.x, base.y, base.z);
+
+            } else {
+                System.out.println("I is " + i);
+
+                y1  = y0 + (float) (1/h);
+                fx0 = (1 - (float) (1/h)) * ix0;
+                fz0 = (1 - (float) (1/h)) * iz0;
+                fx1 = (1 - (float) (1/h)) * ix1;
+                fz1 = (1 - (float) (1/h)) * iz1;
+
+                addTriangle(ix0, y0, iz0,
+                            ix1, y0, iz1,
+                            fx0, y1, fz0);
+
+                addTriangle(ix1, y0, iz1,
+                            fx1, y1, fz1,
+                            fx0, y1, fz0);
+
+
+                y0  = y1;
+                ix0 = fx0;
+                iz0 = fz0;
+                ix1 = fx1;
+                iz1 = fz1;
+            }
+        }
     }
 
     /**
