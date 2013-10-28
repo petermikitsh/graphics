@@ -305,9 +305,9 @@ public class cgShape extends simpleShape
             x1 = r * (float) Math.cos(Math.toRadians(theta1));
             z1 = r * (float) Math.sin(Math.toRadians(theta1));
 
-            addTriangle( d0.x, d0.y, d0.z,
-                           x0, d0.y,   z0,
-                           x1, d0.y,   z1);
+            addTriangle( x1,   d0.y,   z1,
+                         x0,   d0.y,   z0,
+                         d0.x, d0.y, d0.z);
 
             Point p0 = new Point(x0, d0.y, z0);
             Point p1 = new Point(x1, d0.y, z1);
