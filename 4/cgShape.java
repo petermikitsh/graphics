@@ -7,6 +7,7 @@
  * functions in this file using the function "addTriangle()" to do the 
  * tessellation.
  *
+ * author: peter mikitsh pam3961
  */
 
 import java.awt.*;
@@ -34,10 +35,7 @@ public class cgShape extends simpleShape
         constructIcosahedron();
 	}
 
-    // public enum Axis {
-    //     X, Y, Z;
-    // }
-
+    /* A point in 3d space (world coordinates). */
     static class Point {
         float x, y, z;
         public Point(float x, float y, float z) {
@@ -46,6 +44,7 @@ public class cgShape extends simpleShape
             this.z = z;
         }
 
+        /* Normalize the point. */
         public void normalize() {
             float d = (float) Math.sqrt((x * x) + (y * y) + (z * z));
             if (d != 0.0) {
@@ -56,6 +55,7 @@ public class cgShape extends simpleShape
             scale();
         }
 
+        /* Scale: used to reduce icosahedron by half. */
         public void scale() {
             x /= 2;
             y /= 2;
@@ -63,14 +63,24 @@ public class cgShape extends simpleShape
         }
     }
 
+    /* Triangle ADT: A store of three points. */
     static class Triangle {
+
+        /* Points: Intended usage of three points in the list. */
         List<Point> points;
+
+        /* Constructor */
         public Triangle(List<Point> points) {
             this.points = points;
         }
+        
+        /* Convenience accessor for points. */
         public Point get (int i) {
             return points.get(i);
         }
+
+        /* Splits a triangle into four triangles, using the midpoint
+           of the three line segments formed from the three points. */
         public List<Triangle> subdivide() {
 
             List<Triangle> list = new ArrayList<Triangle>(4);
@@ -90,18 +100,21 @@ public class cgShape extends simpleShape
             return list;
         }
 
+        /* Find the mid X coordinate between the ith and i+1th point. */
         public float midX(int i) {
             int j;
             j = i >= 2 ? 0 : i+1;
             return (points.get(i).x + points.get(j).x) / 2.0f;
         }
 
+        /* Find the mid Y coordinate between the ith and i+1th point. */
         public float midY(int i) {
             int j;
             j = i >= 2 ? 0 : i+1;
             return (points.get(i).y + points.get(j).y) / 2.0f;
         }
 
+        /* Find the mid Z coordinate between the ith and i+1th point. */
         public float midZ(int i) {
             int j;
             j = i >= 2 ? 0 : i+1;
@@ -199,8 +212,7 @@ public class cgShape extends simpleShape
     }
 
     /* Approximates disks on the y-axis centered at (0,0).
-       Draws triangles by connecting points at Theta_i, Theta_i+1, and the center.
-    */
+       Draws triangles by connecting points at Theta_i, Theta_i+1, and the center. */
     private void makeDisks(float r, int n, int rect) {
 
         float x0, z0, x1, z1, theta0, theta1;
@@ -238,6 +250,7 @@ public class cgShape extends simpleShape
 
     }
 
+    /* Draws the cylinder's height triangles. */
     private void drawCylinderRect(Point p0, Point p1, int n) {
         float y0, y1;
         
@@ -286,8 +299,7 @@ public class cgShape extends simpleShape
 
 
     /* Approximates disks on the y-axis centered at (0,0).
-       Draws triangles by connecting points at Theta_i, Theta_i+1, and the center.
-    */
+       Draws triangles by connecting points at Theta_i, Theta_i+1, and the center. */
     private void makeConeDisk(float r, int n, int h) {
 
         float x0, z0, x1, z1, theta0, theta1;
@@ -321,6 +333,9 @@ public class cgShape extends simpleShape
 
     }
 
+    /* Draws the cone height. Calculates an initial (x,z) pair for the ith level,
+      and another (x,z) pair for the i+1th level. For the last iteration, draw the
+      single triangle to cone top. */
     private void makeConeHeight(Point p0, Point p1, int h) {
         float ix0, iz0, ix1, iz1, fx0, fz0, fx1, fz1, y0, y1;
 
@@ -363,6 +378,7 @@ public class cgShape extends simpleShape
         }
     }
 
+    /* Icosahedron, as defined in the lecture notes. */
     private void constructIcosahedron() {
         float a = 2f / (float) (1f + Math.sqrt(5));
 
@@ -428,6 +444,7 @@ public class cgShape extends simpleShape
     public void makeSphere (float radius, int slices, int stacks)
     {
 
+        /* Limit slices to five for recursive subdivision method. */
         if (slices > 5)
           slices = 5;
 
@@ -439,6 +456,9 @@ public class cgShape extends simpleShape
 
     }
 
+    /* makeSphereDivision: Initialize the list for the icosahedron hash map at level n.
+       For each triangle in the parent subdivision, form its subdivisions and store  in the list.
+       Store the list in the hash map with key n. */
     private void makeSphereDivision(int n) {
         List<Triangle> dN = new ArrayList<Triangle>(4*icosahedron.get(n-1).size());
         for (Triangle t : icosahedron.get(n-1)) {
