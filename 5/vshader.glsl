@@ -1,3 +1,5 @@
+// author: peter mikitsh pam3961
+
 attribute vec4 vPosition;
 attribute float projType;
 

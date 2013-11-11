@@ -1,6 +1,7 @@
 /**
  *
  * viewParams.java
+ * author: peter mikitsh pam3961
  *
  * Simple class for setting up the viewing and projection transforms
  * for the Transformation Assignment.
@@ -39,9 +40,7 @@ public class viewParams
      */
     public void setUpFrustrum (int program, GL2 gl2)
     {
-        // System.out.println("program " + program);
-        // copyCommonParameters(program, gl2);
-        int projTypeID   = gl2.glGetAttribLocation( program, "projType");
+        int projTypeID = gl2.glGetAttribLocation( program, "projType");
         gl2.glUniform1f( projTypeID, 0.0f );
     }
 
@@ -61,7 +60,7 @@ public class viewParams
      */
     public void setUpOrtho (int program, GL2 gl2)
     {
-        int projTypeID   = gl2.glGetAttribLocation( program, "projType");
+        int projTypeID = gl2.glGetAttribLocation( program, "projType");
         gl2.glUniform1f( projTypeID, 1.0f );
     }
 
