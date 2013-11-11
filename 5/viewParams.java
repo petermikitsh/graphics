@@ -41,7 +41,7 @@ public class viewParams
     public void setUpFrustrum (int program, GL2 gl2)
     {
         int projTypeID = gl2.glGetAttribLocation( program, "projType");
-        gl2.glUniform1f( projTypeID, 0.0f );
+        gl2.glVertexAttrib1f( projTypeID, 0.0f );
     }
 
     /**
@@ -61,7 +61,7 @@ public class viewParams
     public void setUpOrtho (int program, GL2 gl2)
     {
         int projTypeID = gl2.glGetAttribLocation( program, "projType");
-        gl2.glUniform1f( projTypeID, 1.0f );
+        gl2.glVertexAttrib1f( projTypeID, 1.0f );
     }
 
 }
