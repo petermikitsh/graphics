@@ -23,7 +23,6 @@ public class viewParams
 
     }
 
-
     /**
      * This function sets up the view and projection parameter for a frustrum
      * projection of the scene. See the assignment description for the values
@@ -40,7 +39,10 @@ public class viewParams
      */
     public void setUpFrustrum (int program, GL2 gl2)
     {
-        // Add your code here.
+        // System.out.println("program " + program);
+        // copyCommonParameters(program, gl2);
+        int projTypeID   = gl2.glGetAttribLocation( program, "projType");
+        gl2.glUniform1f( projTypeID, 0.0f );
     }
 
     /**
@@ -59,7 +61,8 @@ public class viewParams
      */
     public void setUpOrtho (int program, GL2 gl2)
     {
-        // Add your code here.
+        int projTypeID   = gl2.glGetAttribLocation( program, "projType");
+        gl2.glUniform1f( projTypeID, 1.0f );
     }
 
 }
