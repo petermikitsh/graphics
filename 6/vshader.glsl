@@ -7,23 +7,14 @@ attribute vec4 vPosition;
 // Normal vector at vertex (in model space)
 attribute vec3 vNormal;
 
-
 // Light position is given in world space
 uniform vec4 lightPosition;
-
-// Specular Exponent
-uniform float Ns;
-
-// Specular Color
-uniform vec4 Is;
-
 
 // Vectors to "attach" to vertex and get sent to fragment shader
 // Vectors and points will be passed in "eye" space
 varying vec3 lPos;
 varying vec3 vPos;
 varying vec3 vNorm;
-
 
 void main()
 {
