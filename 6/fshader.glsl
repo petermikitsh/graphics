@@ -1,3 +1,6 @@
+// fshader.glsl
+// author: peter mikitsh pam3961
+
 // Light color
 uniform vec4 lightColor;
 
@@ -23,8 +26,8 @@ void main()
     vec3 N = normalize (vNorm);
 
     // specular vectors
-    vec3 R = normalize(-reflect(L, N));
-    vec3 V = normalize (-vPos.xyz);
+    vec3 R = normalize (reflect(L, N));
+    vec3 V = normalize (vPos.xyz);
     
     // calculate components
     vec4 diffuse = lightColor * diffuseColor * (dot(N, L));

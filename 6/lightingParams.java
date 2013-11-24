@@ -6,6 +6,7 @@
  * for the Shading Assignment.
  *
  * Students are to complete this class.
+ * author: Peter Mikitsh pam3961
  *
  */
 

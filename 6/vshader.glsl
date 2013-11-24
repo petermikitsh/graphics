@@ -1,3 +1,6 @@
+// vshader.glsl
+// author: peter mikitsh pam3961
+
 // Vertex position (in model space)
 attribute vec4 vPosition;
 
