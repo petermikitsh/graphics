@@ -19,6 +19,10 @@ public class lightingParams
     private float lightpos[] = {0.0f, 5.0f, 2.0f, 1.0f};
     private float lightColor[] = {1.0f, 1.0f, 0.0f, 1.0f};
     private float diffuse[] = {0.89f, 0.0f, 0.0f, 1.0f};
+
+    // specular data
+    private float specular = 10.0f;
+    private float specularColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
     
     /**
      * constructor
@@ -47,11 +51,18 @@ public class lightingParams
         int lightc = gl2.glGetUniformLocation( program , "lightColor" );
         int diff = gl2.glGetUniformLocation( program , "diffuseColor" );
         
+        
         gl2.glUniform4fv( light , 1 , lightpos, 0 );
         gl2.glUniform4fv( lightc , 1 , lightColor, 0 );
         gl2.glUniform4fv( diff , 1 , diffuse, 0 );
+
         
         // You need to add code for the specular component
+        int specExp = gl2.glGetUniformLocation( program , "Ns" );
+        int specColor = gl2.glGetUniformLocation( program , "Is" );
+
+        gl2.glUniform1f( specExp, specular );
+        gl2.glUniform4fv( specColor , 1 , specularColor, 0 );
 
     }
 }
