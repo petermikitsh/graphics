@@ -9,7 +9,10 @@
  *
  */
 
+import java.awt.image.BufferedImage;
 import java.io.*;
+import java.nio.IntBuffer;
+import javax.imageio.ImageIO;
 import javax.media.opengl.*;
 import javax.media.opengl.awt.GLCanvas;
 import javax.media.opengl.fixedfunc.*;
@@ -18,6 +21,8 @@ import com.jogamp.opengl.util.texture.*;
 public class textureParams
 {
     
+    Texture t;
+
 	/**
 	 * constructor
 	 */
@@ -37,6 +42,15 @@ public class textureParams
      */
     public void loadTexture (String filename)
     {
+        try {
+         InputStream stream = getClass().getResourceAsStream(filename);
+         TextureData data = TextureIO.newTextureData(GLProfile.getDefault(), stream, false, "jpg");
+         t = TextureIO.newTexture(data);
+        }
+        catch (IOException e) {
+         e.printStackTrace();
+         System.exit(1);
+        }
     }
 
     
