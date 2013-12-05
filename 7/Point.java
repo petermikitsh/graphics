@@ -27,4 +27,16 @@ class Point {
         y /= 2;
         z /= 2; 
     }
+
+    /* Calculate spherical mapping coordinates.
+     * Functions from http://www.mvps.org/directx/articles/spheremap.htm
+    */ 
+
+    public float u() {
+        return (float) (Math.asin(x) / Math.PI + 0.5f); 
+    }
+
+    public float v() {
+        return (float) (Math.asin(y) / Math.PI + 0.5f);
+    }
 }

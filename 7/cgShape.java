@@ -109,12 +109,13 @@ public class cgShape extends simpleShape
     {
 
         /* Limit slices to five for recursive subdivision method. */
-        int slices = 5;
+        int slices = 2;
 
         for (Triangle t : icosahedron.get(slices-1)) {
-            addTriangle(t.get(0).x, t.get(0).y, t.get(0).z, 0f, 0f,
-                        t.get(1).x, t.get(1).y, t.get(1).z, 0f, 0f,
-                        t.get(2).x, t.get(2).y, t.get(2).z, 0f, 0f);
+            addTriangle(t.get(0).x, t.get(0).y, t.get(0).z, t.get(0).u(), t.get(0).v(),
+                        t.get(1).x, t.get(1).y, t.get(1).z, t.get(1).u(), t.get(1).v(),
+                        t.get(2).x, t.get(2).y, t.get(2).z, t.get(2).u(), t.get(2).v());
+            // System.out.printf("%f %f %f %f %f\n", t.get(0).x, t.get(0).y, t.get(0).z, t.get(0).u(), t.get(0).v());
         }
 
     }
