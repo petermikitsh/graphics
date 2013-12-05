@@ -69,5 +69,7 @@ public class textureParams
      */
     public void setUpTextures (int program, GL2 gl2)
     {
+        t.enable(gl2);
+        t.bind(gl2);
     }
 }
